@@ -1,8 +1,10 @@
 # aws_rds_boto3_psycopg2
 
-# Set aws.config.json file
+# Create Credential Files
 
-Need to set the AWS configuration in `aws_config.json` file
+### aws_config.json
+
+Need to create `aws_config.json` file, contains AWS configuration:
 
 ```
 {
@@ -35,6 +37,19 @@ Need to set the AWS configuration in `aws_config.json` file
     "db_instance_publicly_accessible": "<db_instance_publicly_accessible>",
     "db_instance_db_subnet_group_name": "<db_instance_db_subnet_group_name>"
 }
+```
+
+### database.ini
+
+Need to create `database.ini` file, contains database configuration:
+
+```
+[postgresql]
+database=<database_name>
+host=<host>
+port=<port>
+user=<master_user_name>
+password=<master_user_password>
 ```
 
 # Usage
