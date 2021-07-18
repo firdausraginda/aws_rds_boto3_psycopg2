@@ -31,10 +31,13 @@ def get_db_config(filename=db_config_file, section='postgresql'):
     return db_config_items
 
 
-def connect_to_db_rds(db_config_items):
+def connect_to_db_rds():
     """connect to DB RDS"""
 
     try:
+        # retrieve db config from database.ini file
+        db_config_items = get_db_config()
+
         # connect to DB using db config in params
         connection = psycopg2.connect(**db_config_items)
 
@@ -51,8 +54,11 @@ def connect_to_db_rds(db_config_items):
     return cursor, connection
 
 
-def create_table(db_cursor, db_connection):
+def create_table():
     """create table users & products"""
+    
+    # build connection to db
+    db_cursor, db_connection = connect_to_db_rds()
 
     # provide sql statements
     commands = (
@@ -67,7 +73,7 @@ def create_table(db_cursor, db_connection):
         CREATE TABLE IF NOT EXISTS products (
             id VARCHAR PRIMARY KEY,
             name VARCHAR NOT NULL,
-            price BIGINT NOT NULL,
+            price BIGINT NOT NULL
         );
         '''
     )
@@ -98,8 +104,11 @@ def create_table(db_cursor, db_connection):
     return None
 
 
-def insert_values(db_cursor, db_connection):
+def insert_values():
     """insert values from sql files to table users & products"""
+    
+    # build connection to db
+    db_cursor, db_connection = connect_to_db_rds()
 
     # set path to sql file
     path_to_insert_users_sql = os.path.join(
@@ -134,18 +143,20 @@ def insert_values(db_cursor, db_connection):
     return None
 
 
-def get_data(db_cursor, db_connection, table):
+def get_data(table):
     """print data from table"""
+    
+    # build connection to db
+    db_cursor, db_connection = connect_to_db_rds()
 
     try:
         # query data from table in func parameter
         db_cursor.execute(
             '''
-            SELECT * FROM %s ;
-            ''',
-            (table)
+            SELECT * FROM {} ;
+            '''.format(table)
         )
-
+        
         # fetch all query result and assign to query_results
         query_results = db_cursor.fetchall()
 
@@ -172,20 +183,18 @@ def get_data(db_cursor, db_connection, table):
     return None
 
 if __name__ == '__main__':
-
-    db_config_items = get_db_config()
     
     # build connection to db
-    db_cursor, db_connection = connect_to_db_rds(db_config_items)
+    connect_to_db_rds()
 
     # create table
-    create_table(db_cursor, db_connection)
+    create_table()
 
     # insert values
-    insert_values(db_cursor, db_connection)
+    insert_values()
 
     # print data users
-    get_data(db_cursor, db_connection, 'users')
+    get_data('users')
 
     # print data products
-    get_data(db_cursor, db_connection, 'products')
+    get_data('products')

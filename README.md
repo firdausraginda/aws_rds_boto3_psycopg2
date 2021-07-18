@@ -59,3 +59,8 @@ To run script that set AWS config:
 ```
 pipenv run python aws_config/main.py -c aws_config.json
 ```
+
+To run script that access DB:
+```
+pipenv run python db_config/db_access.py
+```
