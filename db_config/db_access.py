@@ -102,7 +102,7 @@ def create_table():
         sys.exit(1)
     
     else:
-        print('successfully create table users & products')
+        print('successfully create table users, products, & orders')
     
     finally:
         # to close connection after build connection process
@@ -143,7 +143,7 @@ def insert_values():
         sys.exit(1)
 
     else:
-        print('successfully insert product & user data')
+        print('successfully insert user, product, & order data')
 
     finally:
         
