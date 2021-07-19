@@ -75,6 +75,14 @@ def create_table():
             name VARCHAR NOT NULL,
             price BIGINT NOT NULL
         );
+        ''',
+        '''
+        CREATE TABLE IF NOT EXISTS orders (
+            id VARCHAR PRIMARY KEY,
+            product_id VARCHAR REFERENCES products(id) ON DELETE CASCADE,
+            user_id VARCHAR REFERENCES users(id) ON DELETE CASCADE,
+            quantity INTEGER NOT NULL
+        )
         '''
     )
 
@@ -115,11 +123,14 @@ def insert_values():
         os.path.dirname(__file__), './insert_users.sql')
     path_to_insert_products_sql = os.path.join(
         os.path.dirname(__file__), './insert_products.sql')
+    path_to_insert_orders_sql = os.path.join(
+        os.path.dirname(__file__), './insert_orders.sql')
 
     try:
         # execute command via SQL file
         db_cursor.execute(open(path_to_insert_users_sql, "r").read())
         db_cursor.execute(open(path_to_insert_products_sql, "r").read())
+        db_cursor.execute(open(path_to_insert_orders_sql, "r").read())
 
         # commit changes
         db_connection.commit()
@@ -198,3 +209,6 @@ if __name__ == '__main__':
 
     # print data products
     get_data('products')
+
+    # print data orders
+    get_data('orders')
