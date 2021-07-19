@@ -172,7 +172,7 @@ def get_data(table):
         sys.exit(1)
 
     else:
-        print('successfully retrieve product/user data')
+        print(f'successfully retrieve {table} data')
 
     finally:
 
