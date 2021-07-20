@@ -54,42 +54,28 @@ def connect_to_db_rds():
     return cursor, connection
 
 
-def create_table():
-    """create table users & products"""
+def set_path_to_sql_file(sql_command_type, sql_file_name):
+    """set path to sql file"""
+    
+    return os.path.join(
+        os.path.dirname(__file__), f'./src/{sql_command_type}_{sql_file_name}.sql')
+
+
+def create_table(sql_command_type='create'):
+    """create table users, products, & orders"""
     
     # build connection to db
     db_cursor, db_connection = connect_to_db_rds()
 
-    # provide sql statements
-    commands = (
-        '''
-        CREATE TABLE IF NOT EXISTS users (
-            id VARCHAR PRIMARY KEY,
-            name VARCHAR NOT NULL,
-            phone VARCHAR NOT NULL
-        );
-        ''',
-        '''
-        CREATE TABLE IF NOT EXISTS products (
-            id VARCHAR PRIMARY KEY,
-            name VARCHAR NOT NULL,
-            price BIGINT NOT NULL
-        );
-        ''',
-        '''
-        CREATE TABLE IF NOT EXISTS orders (
-            id VARCHAR PRIMARY KEY,
-            product_id VARCHAR REFERENCES products(id) ON DELETE CASCADE,
-            user_id VARCHAR REFERENCES users(id) ON DELETE CASCADE,
-            quantity INTEGER NOT NULL
-        )
-        '''
-    )
+    # define tables to create
+    tables_to_create = ['users', 'products', 'orders']
 
     try:
         # execute sql commands
-        for command in commands:
-            db_cursor.execute(command)
+        for table_to_create in tables_to_create:
+            db_cursor.execute(
+                open(set_path_to_sql_file(sql_command_type, table_to_create), "r").read()
+            )
 
         # commit changes
         db_connection.commit()
@@ -112,25 +98,21 @@ def create_table():
     return None
 
 
-def insert_values():
-    """insert values from sql files to table users & products"""
+def insert_values(sql_command_type='insert'):
+    """insert values from sql files to table users, products, & orders"""
     
     # build connection to db
     db_cursor, db_connection = connect_to_db_rds()
 
-    # set path to sql file
-    path_to_insert_users_sql = os.path.join(
-        os.path.dirname(__file__), './insert_users.sql')
-    path_to_insert_products_sql = os.path.join(
-        os.path.dirname(__file__), './insert_products.sql')
-    path_to_insert_orders_sql = os.path.join(
-        os.path.dirname(__file__), './insert_orders.sql')
+    # define data to insert
+    collections_data_to_insert = ['users', 'products', 'orders']
 
     try:
-        # execute command via SQL file
-        db_cursor.execute(open(path_to_insert_users_sql, "r").read())
-        db_cursor.execute(open(path_to_insert_products_sql, "r").read())
-        db_cursor.execute(open(path_to_insert_orders_sql, "r").read())
+        # execute insert command via SQL file
+        for collection_data_to_insert in collections_data_to_insert:
+            db_cursor.execute(
+                open(set_path_to_sql_file(sql_command_type, collection_data_to_insert), "r").read()
+            )
 
         # commit changes
         db_connection.commit()
