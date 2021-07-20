@@ -3,7 +3,7 @@
 # Create Credential Files
 
 If you are **familiar** with AWS RDS & PostgreSQL DB, I've compiled the configuration in 2 files for central setup: `aws_config.json` & `database.ini`. Can just create those 2 files in the root directory before run the program.
-If this is your **first time** using AWS RDS, kindly jump to the **AWS Depedencies** section below and follow the steps there.
+If this is your **first time** using AWS RDS, kindly jump to the **AWS Depedencies** section below and follow the steps there, then return here.
 
 **1. aws_config.json**
 In `aws_config.json` file, kindly fill the AWS configurations:
